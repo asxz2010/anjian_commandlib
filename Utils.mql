@@ -1,0 +1,21 @@
+Import "shanhai.lua"
+Function 百度AI识别文字()
+	Dim api,secret,post_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl
+	api="LGZTmkf9AwP78E01jiYpmDyM"		// 百度云识别平台应用API Key
+	secret="WGOi6d3tQvtB2B95XZCe2zeEnL5E1rtO"		// 百度云识别平台应用Secret Key
+	paramers = "grant_type=client_credentials&client_id=" & api & "&client_secret=" & secret
+	post_url="https://aip.baidubce.com/oauth/2.0/token"		// 授权服务地址
+	data = URL.Post(post_url, paramers)
+	token = Encode.JsonToTable(data)	// token
+	
+	// base64编码，再转url编码
+	phoBase64 = ShanHai.ReadFileBase("/sdcard/Pictures/Screenshots/Screenshot_20210219-131825.png")	// base64编码：ShanHai.ReadFileBase(路径)
+	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
+	
+	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
+	post_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"
+	post_content = URL.Post(post_url, post_paramers)
+	
+	Dim json = Encode.JsonToTable(post_content)
+	json = json["words_result"]
+End Function
