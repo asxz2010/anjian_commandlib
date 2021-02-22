@@ -1,6 +1,11 @@
 
 {
 	"Description" : null,
+	"创建文件夹" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"文本坐标" : 
 	{
 		"Description" : null,
@@ -12,6 +17,11 @@
 		"TranslateTemplate" : null
 	},
 	"百度AI识别文字" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"获取文本坐标" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null

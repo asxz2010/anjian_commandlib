@@ -1,6 +1,8 @@
 Import "shanhai.lua"
 
-/*
+
+
+/**
 	方法名：百度AI识别文字 
 	返回值：识别结果（json类型，含位置信息）
 */
@@ -13,7 +15,6 @@ Function 百度AI识别文字()
 	data = URL.Post(post_url, paramers)
 	token = Encode.JsonToTable(data)	// token
 
-	Dir.Create("/sdcard/Pictures/临时")
 	SnapShot "/sdcard/Pictures/临时/最新.png", 0, 0, 0, 0
 	// base64编码，再转url编码
 	phoBase64 = ShanHai.ReadFileBase("/sdcard/Pictures/临时/最新.png")	// base64编码：ShanHai.ReadFileBase(路径)
@@ -22,53 +23,44 @@ Function 百度AI识别文字()
 	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
 	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"	// 通用文字识别（标准含位置版）
 	post_content = URL.Post(post_url2, post_paramers)
-	TracePrint post_content
 	百度AI识别文字 = Encode.JsonToTable(post_content)
 End Function
 
 
-/*
-	方法名：文本坐标 
+
+/**
+	方法名：获取文本坐标 
 	参数：arr---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
 		  word---目标字
-	返回值：坐标
+	返回值：坐标或提示信息（字符串类型）
 */
-Function 文本坐标(arr, words, word)
+Function 获取文本坐标(arr, words, word)
 	For i = 0 To UBOUND(arr)
 		If UTF8.InStr(1, arr[i + 1]["words"], words) > 0 Then 
 			Dim chars = arr[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
 				If chars[j + 1]["char"] = word Then 
-					文本坐标 = chars[j+1]["location"]["left"] & "," & chars[j+1]["location"]["top"]
-					Exit For
+					获取文本坐标 = chars[j+1]["location"]["left"] & "," & chars[j+1]["location"]["top"]
+					Exit Function
 				End If
 			Next
 			Exit For
 		End If
 	Next
-	
+	获取文本坐标 = "未找到坐标"
 End Function
 
 
-
-Function 百度AI识别()
-	Dim api,secret,post_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl,post_url2
-	api="LGZTmkf9AwP78E01jiYpmDyM"		// 百度云识别平台应用API Key
-	secret="WGOi6d3tQvtB2B95XZCe2zeEnL5E1rtO"		// 百度云识别平台应用Secret Key
-	paramers = "grant_type=client_credentials&client_id=" & api & "&client_secret=" & secret
-	post_url="https://aip.baidubce.com/oauth/2.0/token"		// 授权服务地址
-	data = URL.Post(post_url, paramers)
-	token = Encode.JsonToTable(data)	// token
-
-	Dir.Create("/sdcard/Pictures/临时")
-	SnapShot "/sdcard/Pictures/临时/最新.png", 0, 0, 0, 0
-	// base64编码，再转url编码
-	phoBase64 = ShanHai.ReadFileBase("/sdcard/Pictures/临时/最新.png")	// base64编码：ShanHai.ReadFileBase(路径)
-	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
-
-	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl
-	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic"	// 通用文字识别（标准含位置版）
-	post_content = URL.Post(post_url2, post_paramers)
-	百度AI识别 = post_content
+/**
+	方法名：创建文件夹 
+	参数：path---要创建的文件夹路径
+*/
+Function 创建文件夹(path)
+	Dim bool = Dir.Create(path)
+	If bool Then 
+		TracePrint path & "：成功"
+	Else 
+		TracePrint path & "：失败"
+	End If
 End Function
