@@ -1,4 +1,6 @@
 Import "shanhai.lua"
+Import "zm.luae"
+zm.Init
 
 
 
@@ -30,15 +32,15 @@ End Function
 
 /**
 	方法名：获取文本坐标 
-	参数：arr---百度AI识别文字后的words_result
+	参数：json---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
 		  word---目标字
 	返回值：坐标或提示信息（字符串类型）
 */
-Function 获取文本坐标(arr, words, word)
-	For i = 0 To UBOUND(arr)
-		If UTF8.InStr(1, arr[i + 1]["words"], words) > 0 Then 
-			Dim chars = arr[i+1]["chars"]
+Function 获取文本坐标(json, words, word)
+	For i = 0 To UBOUND(json)
+		If UTF8.InStr(1, json[i + 1]["words"], words) > 0 Then 
+			Dim chars = json[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
 				If chars[j + 1]["char"] = word Then 
 					获取文本坐标 = chars[j+1]["location"]["left"] & "," & chars[j+1]["location"]["top"]
@@ -48,8 +50,10 @@ Function 获取文本坐标(arr, words, word)
 			Exit For
 		End If
 	Next
-	获取文本坐标 = "未找到坐标"
+	TracePrint words & "：坐标查找-失败"
+	EndScript
 End Function
+
 
 
 /**
@@ -63,4 +67,24 @@ Function 创建文件夹(path)
 	Else 
 		TracePrint path & "：失败"
 	End If
+End Function
+
+
+/**
+	方法名：是否包含目标字 
+	参数：word---目标字
+*/
+Function 是否包含目标字(word)
+	Dim ret, t()
+	If Not zm.OcrBaiDuInit("LGZTmkf9AwP78E01jiYpmDyM", "WGOi6d3tQvtB2B95XZCe2zeEnL5E1rtO") Then
+    	TracePrint "初始化设置百度云识别失败"
+    	EndScript
+	End If
+	ret = zm.OcrBaiDu(0, 0, 0, 0)
+	If UTF8.InStr(1, ret, word) > 0 Then 
+		是否包含目标字 = True
+	Else 
+		是否包含目标字 = False
+	End If
+	TracePrint "识别结果:", ret
 End Function

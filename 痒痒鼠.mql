@@ -7,7 +7,9 @@ Function 保存坐标(jsonObj)
 	If IsNull(jsonObj) = False Then 
 		Dim jsonStr = Encode.TableToJson(jsonObj)
 		File.Write("/sdcard/Pictures/痒痒鼠/坐标.json", jsonStr)
+		TracePrint "坐标保存-成功"
 	Else 
 		TracePrint "坐标对象为空"
 	End If
 End Function
+
