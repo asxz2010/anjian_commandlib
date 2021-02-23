@@ -23,8 +23,9 @@ Function 百度AI识别文字()
 	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
 
 	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
-	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"	// 通用文字识别（标准含位置版）
+	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate"
 	post_content = URL.Post(post_url2, post_paramers)
+	TracePrint post_content
 	百度AI识别文字 = Encode.JsonToTable(post_content)
 End Function
 
@@ -39,11 +40,14 @@ End Function
 */
 Function 获取文本坐标(json, words, word)
 	For i = 0 To UBOUND(json)
-		If UTF8.InStr(1, json[i + 1]["words"], words) > 0 Then 
-			Dim chars = json[i+1]["chars"]
+		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
+			Dim chars, x, y
+			chars = json[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
 				If chars[j + 1]["char"] = word Then 
-					获取文本坐标 = chars[j+1]["location"]["left"] & "," & chars[j+1]["location"]["top"]
+					x = chars[j+1]["location"]["left"]
+					y = chars[j+1]["location"]["top"]
+					获取文本坐标={"x":x,"y":y}
 					Exit Function
 				End If
 			Next
@@ -70,6 +74,7 @@ Function 创建文件夹(path)
 End Function
 
 
+
 /**
 	方法名：是否包含目标字 
 	参数：word---目标字
@@ -85,6 +90,10 @@ Function 是否包含目标字(word)
 		是否包含目标字 = True
 	Else 
 		是否包含目标字 = False
+		TracePrint ret
 	End If
-	TracePrint "识别结果:", ret
+	
 End Function
+
+
+
