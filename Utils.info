@@ -6,6 +6,11 @@
 		"Description" : null,
 		"TranslateTemplate" : null
 	},
+	"删除文件夹" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"文本坐标" : 
 	{
 		"Description" : null,
@@ -27,6 +32,11 @@
 		"TranslateTemplate" : null
 	},
 	"获取文本坐标" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"获取文本坐标及长高" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null

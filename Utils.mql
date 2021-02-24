@@ -41,7 +41,7 @@ End Function
 Function 获取文本坐标(json, words, word)
 	For i = 0 To UBOUND(json)
 		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
-			Dim chars, x, y
+			Dim chars, x, y, w, h
 			chars = json[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
 				If chars[j + 1]["char"] = word Then 
@@ -54,8 +54,39 @@ Function 获取文本坐标(json, words, word)
 			Exit For
 		End If
 	Next
+	获取文本坐标 = False
 	TracePrint words & "：坐标查找-失败"
-	EndScript
+End Function
+
+
+
+/**
+	方法名：获取文本坐标 
+	参数：json---百度AI识别文字后的words_result
+		  words---目标字所在的词句（尽量唯一、少字）
+		  word---目标字
+	返回值：坐标或提示信息（字符串类型）
+*/
+Function 获取文本坐标及长高(json, words, word)
+	For i = 0 To UBOUND(json)
+		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
+			Dim chars, x, y, w, h
+			chars = json[i+1]["chars"]
+			For j = 0 To UBOUND(chars)
+				If chars[j + 1]["char"] = word Then 
+					x = chars[j+1]["location"]["left"]
+					y = chars[j+1]["location"]["top"]
+					w = chars[j+1]["location"]["width"]
+					h = chars[j+1]["location"]["height"]
+					获取文本坐标及长高={"x":x,"y":y,"w":w,"h":h}
+					Exit Function
+				End If
+			Next
+			Exit For
+		End If
+	Next
+	获取文本坐标及长高 = False
+	TracePrint words & "：坐标及长高查找-失败"
 End Function
 
 
@@ -76,6 +107,21 @@ End Function
 
 
 /**
+	方法名：删除文件夹 
+	参数：path---要删除的文件夹路径
+*/
+Function 删除文件夹(path)
+	Dir.Delete(path)
+	If IsNull(File.Read(path)) Then 
+		TracePrint path & "：已删除"
+	Else 
+		TracePrint path & "：未删除"
+	End If
+End Function
+
+
+
+/**
 	方法名：是否包含目标字 
 	参数：word---目标字
 */
@@ -90,9 +136,7 @@ Function 是否包含目标字(word)
 		是否包含目标字 = True
 	Else 
 		是否包含目标字 = False
-		TracePrint ret
 	End If
-	
 End Function
 
 
