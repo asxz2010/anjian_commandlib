@@ -51,6 +51,24 @@ End Function
 
 
 /**
+	方法名：获取精准文本坐标 （返回第一个匹配的坐标）
+	参数：json---百度AI识别文字后的words_result
+		  words ---目标文本
+		  word---目标文本中的单字
+	返回值：坐标或提示信息（字符串类型）
+*/
+Function 获取精准文本坐标(json, words)
+	For i = 0 To UBOUND(json)
+		If json(i) = words Then 
+			
+		End If
+	Next
+	TracePrint words & "：坐标查找-失败"
+End Function
+
+
+
+/**
 	方法名：获取文本坐标 （返回第一个匹配的坐标）
 	参数：json---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
@@ -84,7 +102,7 @@ End Function
 	参数：json---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
 		  word---目标字
-	返回值：坐标或提示信息（字符串类型）
+	返回值：Array
 */
 Function 获取所有文本坐标(json, words, word)
 	Dim h=0,arr()

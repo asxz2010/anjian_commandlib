@@ -31,12 +31,27 @@
 		"Description" : null,
 		"TranslateTemplate" : null
 	},
+	"百度AI识别文字标准版" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"获取所有文本坐标" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"获取文本坐标" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null
 	},
 	"获取文本坐标及长高" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"获取精准文本坐标" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null
