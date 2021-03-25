@@ -49,6 +49,31 @@ Function 百度AI识别文字()
 End Function
 
 
+/**
+	方法名：获取文本坐标
+	参数：json---百度AI识别文字后的words_result
+		  words---目标文本
+		  word---目标文本中的单字
+	返回值：坐标或提示信息（字符串类型）
+*/
+Function 获取精准文本坐标(json, words, word)
+	For i = 0 To UBOUND(json)
+		If json(i)["words"] = words Then
+			Dim chars = json(i)["chars"]
+			For j = 0 To UBOUND(chars)
+				If chars(j) = word Then 
+					Dim x = chars(j)["location"]["left"]
+					Dim y = chars(j)["location"]["top"]
+					获取精准文本坐标 = {"x":x, "y":y}
+					Exit For
+				End If
+			Next
+		End If
+	Next
+	获取精准文本坐标 = Null
+End Function
+
+
 
 /**
 	方法名：获取文本坐标 （返回第一个匹配的坐标）
