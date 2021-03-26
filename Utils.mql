@@ -9,6 +9,40 @@ Dim apikey = "LGZTmkf9AwP78E01jiYpmDyM", seckey="WGOi6d3tQvtB2B95XZCe2zeEnL5E1rt
 
 
 /**
+	方法名：创建文件夹 
+	参数：path---要创建的文件夹路径
+*/
+Function 创建文件夹(path)
+	Dim bool = Dir.Create(path)
+	If bool Then 
+		创建文件夹 = True
+		TracePrint path & "：创建成功"
+	Else 
+		创建文件夹 = False
+		TracePrint path & "：创建失败"
+	End If
+End Function
+
+
+
+/**
+	方法名： 删除文件夹
+	参数：path---要删除的文件夹路径
+*/
+Function 删除文件夹(path)
+	Dim bool = Dir.Delete(path)
+	If bool Then 
+		删除文件夹 = True
+		TracePrint path & "：删除成功"
+	Else 
+		删除文件夹 = False
+		TracePrint path & "：删除失败"
+	End If
+End Function
+
+
+
+/**
 	方法名：百度AI识别文字 
 	返回值：识别结果（json类型，含位置信息）
 */
@@ -50,7 +84,7 @@ End Function
 
 
 /**
-	方法名：获取文本坐标
+	方法名：获取精准文本坐标
 	参数：json---百度AI识别文字后的words_result
 		  words---目标文本
 		  word---目标文本中的单字
@@ -133,36 +167,6 @@ End Function
 
 
 /**
-	方法名：创建文件夹 
-	参数：path---要创建的文件夹路径
-*/
-Function 创建文件夹(path)
-	Dim bool = Dir.Create(path)
-	If bool Then 
-		TracePrint path & "：创建成功"
-	Else 
-		TracePrint path & "：创建失败"
-	End If
-End Function
-
-
-
-/**
-	方法名： 删除文件夹
-	参数：path---要删除的文件夹路径
-*/
-Function 删除文件夹(path)
-	Dim bool = Dir.Delete(path)
-	If bool Then 
-		TracePrint path & "：删除成功"
-	Else 
-		TracePrint path & "：删除失败"
-	End If
-End Function
-
-
-
-/**
 	方法名：是否包含目标字 
 	参数：word---目标字
 */
@@ -180,3 +184,21 @@ Function 是否包含目标字(word)
 	End If
 End Function
 
+
+
+/**
+	方法名：保存坐标 
+	参数：jsonObj --- 坐标对象（JSON类型）
+			path --- 坐标保存到的文件路径
+*/
+Function 保存坐标(jsonObj, path)
+	If IsNull(jsonObj) = False Then 
+		Dim jsonStr = Encode.TableToJson(jsonObj)
+		File.Write path, jsonStr
+		保存坐标 = True
+		TracePrint "坐标保存-成功"
+	Else 
+		保存坐标 = False
+		TracePrint "坐标对象-失败"
+	End If
+End Function

@@ -1,6 +1,11 @@
 
 {
 	"Description" : null,
+	"保存坐标" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"创建文件夹" : 
 	{
 		"Description" : null,
