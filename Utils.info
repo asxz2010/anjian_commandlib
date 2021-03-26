@@ -26,6 +26,11 @@
 		"Description" : null,
 		"TranslateTemplate" : null
 	},
+	"是否包含目标字高精度版" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"百度AI识别" : 
 	{
 		"Description" : null,
@@ -37,6 +42,11 @@
 		"TranslateTemplate" : null
 	},
 	"百度AI识别文字标准版" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"百度AI识别文字高精度版" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null
@@ -57,6 +67,11 @@
 		"TranslateTemplate" : null
 	},
 	"获取精准文本坐标" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"输出所有文字" : 
 	{
 		"Description" : null,
 		"TranslateTemplate" : null

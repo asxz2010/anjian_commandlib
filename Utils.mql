@@ -43,7 +43,7 @@ End Function
 
 
 /**
-	方法名：百度AI识别文字 
+	方法名：百度AI识别文字标准版 
 	返回值：识别结果（json类型，含位置信息）
 */
 Function 百度AI识别文字标准版()
@@ -53,6 +53,20 @@ Function 百度AI识别文字标准版()
 	SnapShot "/临时/1.png", 0,0,0,0
 	ret = zm.OcrBaiDu("/临时/1.png", t)
 	百度AI识别文字标准版=t
+End Function
+
+
+/**
+	方法名：百度AI识别文字高精度版
+	返回值：识别结果（json类型，含位置信息）
+*/
+Function 百度AI识别文字高精度版()
+	Dim ret,t()
+	Dim args = {"apikey":apikey, "seckey":seckey, "posturl":"https://aip.baidubce.com/rest/2.0/ocr/v1/accurate", "recognize_granularity":"small"}
+	zm.OcrBaiDuInit args
+	SnapShot "/临时/1.png", 0,0,0,0
+	ret = zm.OcrBaiDu("/临时/1.png", t)
+	百度AI识别文字高精度版=t
 End Function
 
 
@@ -84,6 +98,18 @@ End Function
 
 
 /**
+	方法名：输出所有文字
+	参数：json---百度AI识别文字后的words_result
+*/
+Function 输出所有文字(json)
+	For i = 0 To UBOUND(json)
+		TracePrint json[i+1]["words"]
+	Next
+End Function
+
+
+
+/**
 	方法名：获取精准文本坐标
 	参数：json---百度AI识别文字后的words_result
 		  words---目标文本
@@ -92,14 +118,15 @@ End Function
 */
 Function 获取精准文本坐标(json, words, word)
 	For i = 0 To UBOUND(json)
-		If json(i)["words"] = words Then
-			Dim chars = json(i)["chars"]
+		TracePrint json[i+1]["words"]
+		If json[i+1]["words"] = words Then
+			Dim chars = json[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
-				If chars(j) = word Then 
-					Dim x = chars(j)["location"]["left"]
-					Dim y = chars(j)["location"]["top"]
-					获取精准文本坐标 = {"x":x, "y":y}
-					Exit For
+				If chars[j+1]["char"] = word Then 
+					Dim x = chars[j+1]["location"]["left"]
+					Dim y = chars[j+1]["location"]["top"]
+					获取精准文本坐标 = {"x":x,"y":y}
+					Exit Function
 				End If
 			Next
 		End If
@@ -148,13 +175,13 @@ End Function
 Function 获取所有文本坐标(json, words, word)
 	Dim h=0,arr()
 	For i = 0 To UBOUND(json)
-		If UTF8.InStr(1, json[i + 1]["words"], words) > 0 Then 
+		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
 			Dim chars, x, y
 			chars = json[i+1]["chars"]
 			For j = 0 To UBOUND(chars)
-				If chars[j + 1]["char"] = word Then 
+				If chars[j+1]["char"] = word Then 
 					x = chars[j+1]["location"]["left"]
-					y = chars[j + 1]["location"]["top"]
+					y = chars[j+1]["location"]["top"]
 					arr(h) = {"x":x, "y":y}
 					h = h + 1
 				End If
@@ -181,6 +208,26 @@ Function 是否包含目标字(word)
 		是否包含目标字 = True
 	Else 
 		是否包含目标字 = False
+	End If
+End Function
+
+
+
+/**
+	方法名：是否包含目标字高精度版
+	参数：word---目标字
+*/
+Function 是否包含目标字高精度版(word)
+	Dim ret, t()
+	If Not zm.OcrBaiDuInit(apikey, seckey, "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic") Then
+    	TracePrint "初始化设置百度云识别失败"
+    	EndScript
+	End If
+	ret = zm.OcrBaiDu(0, 0, 0, 0)
+	If UTF8.InStr(1, ret, word) > 0 Then 
+		是否包含目标字高精度版 = True
+	Else 
+		是否包含目标字高精度版 = False
 	End If
 End Function
 
