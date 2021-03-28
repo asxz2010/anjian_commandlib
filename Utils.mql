@@ -198,6 +198,7 @@ End Function
 	参数：word---目标字
 */
 Function 是否包含目标字(word)
+	ShowMessage "11111"
 	Dim ret, t()
 	If Not zm.OcrBaiDuInit(apikey, seckey) Then
     	TracePrint "初始化设置百度云识别失败"

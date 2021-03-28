@@ -1,0 +1,5 @@
+
+
+Function test(msg)
+	ShowMessage msg
+End Function
