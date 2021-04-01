@@ -76,17 +76,16 @@ End Function
 	返回值：识别结果（json类型，含位置信息）
 */
 Function 百度AI识别文字()
-	Dim api,secret,post_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl,post_url2
-	api="LGZTmkf9AwP78E01jiYpmDyM"		// 百度云识别平台应用API Key
-	secret="WGOi6d3tQvtB2B95XZCe2zeEnL5E1rtO"		// 百度云识别平台应用Secret Key
-	paramers = "grant_type=client_credentials&client_id=" & api & "&client_secret=" & secret
+	Dim post_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl,post_url2,path
+	paramers = "grant_type=client_credentials&client_id=" & apikey & "&client_secret=" & seckey
 	post_url="https://aip.baidubce.com/oauth/2.0/token"		// 授权服务地址
 	data = URL.Post(post_url, paramers)
 	token = Encode.JsonToTable(data)	// token
 
-	SnapShot "/sdcard/Pictures/临时/最新.png", 0, 0, 0, 0
+	path = "/临时/百度AI识别文字.png"
+	SnapShot path, 0, 0, 0, 0
 	// base64编码，再转url编码
-	phoBase64 = ShanHai.ReadFileBase("/sdcard/Pictures/临时/最新.png")	// base64编码：ShanHai.ReadFileBase(路径)
+	phoBase64 = ShanHai.ReadFileBase(path)	// base64编码：ShanHai.ReadFileBase(路径)
 	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
 
 	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
