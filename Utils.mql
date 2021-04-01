@@ -89,9 +89,8 @@ Function 百度AI识别文字()
 	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
 
 	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
-	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate"
+	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"
 	post_content = URL.Post(post_url2, post_paramers)
-	TracePrint post_content
 	百度AI识别文字 = Encode.JsonToTable(post_content)
 End Function
 
