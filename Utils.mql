@@ -9,16 +9,17 @@ Dim apikey = "LGZTmkf9AwP78E01jiYpmDyM", seckey="WGOi6d3tQvtB2B95XZCe2zeEnL5E1rt
 
 
 /**
-	方法名：创建文件夹 
-	参数：path---要创建的文件夹路径
+	方法名：creFolder
+	参数：path ---要创建的文件夹路径
+	描述：创建文件夹
 */
-Function 创建文件夹(path)
+Function creFolder(path)
 	Dim bool = Dir.Create(path)
 	If bool Then 
-		创建文件夹 = True
+		creFolder = True
 		TracePrint path & "：创建成功"
 	Else 
-		创建文件夹 = False
+		creFolder = False
 		TracePrint path & "：创建失败"
 	End If
 End Function
@@ -26,16 +27,17 @@ End Function
 
 
 /**
-	方法名： 删除文件夹
-	参数：path---要删除的文件夹路径
+	方法名：delFolder
+	参数：path ---要删除的文件夹路径
+	描述：删除文件夹
 */
-Function 删除文件夹(path)
+Function delFolder(path)
 	Dim bool = Dir.Delete(path)
 	If bool Then 
-		删除文件夹 = True
+		delFolder = True
 		TracePrint path & "：删除成功"
 	Else 
-		删除文件夹 = False
+		delFolder = False
 		TracePrint path & "：删除失败"
 	End If
 End Function
@@ -43,63 +45,77 @@ End Function
 
 
 /**
-	方法名：百度AI识别文字标准版 
-	返回值：识别结果（json类型，含位置信息）
+	方法名：zmBaiDuAiKnowWords
+	参数：level ---识别版本
+	描述：百度AI识别文字
 */
-Function 百度AI识别文字标准版()
-	Dim ret,t()
-	Dim args = {"apikey":apikey, "seckey":seckey, "posturl":"https://aip.baidubce.com/rest/2.0/ocr/v1/general", "recognize_granularity":"small"}
+Function zmBaiDuAiKnowWords(level)
+	Dim ret,t(),postUrl,Path
+	If level = 0 Then 
+		postUrl = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"	// 标准版
+	Else 
+		postUrl = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate"	// 高精度版
+	End If
+	If isIos() Then 
+		Path = "/temprary/zmBaiDuAiKnowWords.png"
+	Else 
+		Path = "/sdcard/Pictures/temprary/zmBaiDuAiKnowWords.png"
+	End If
+	Dim args = {"apikey":apikey, "seckey":seckey, "posturl":postUrl, "recognize_granularity":"small"}
 	zm.OcrBaiDuInit args
-	SnapShot "/临时/1.png", 0,0,0,0
-	ret = zm.OcrBaiDu("/临时/1.png", t)
-	百度AI识别文字标准版=t
-End Function
-
-
-/**
-	方法名：百度AI识别文字高精度版
-	返回值：识别结果（json类型，含位置信息）
-*/
-Function 百度AI识别文字高精度版()
-	Dim ret,t()
-	Dim args = {"apikey":apikey, "seckey":seckey, "posturl":"https://aip.baidubce.com/rest/2.0/ocr/v1/accurate", "recognize_granularity":"small"}
-	zm.OcrBaiDuInit args
-	SnapShot "/临时/1.png", 0,0,0,0
-	ret = zm.OcrBaiDu("/临时/1.png", t)
-	百度AI识别文字高精度版=t
+	SnapShot Path, 0,0,0,0
+	ret = zm.OcrBaiDu(Path, t)
+	zmBaiDuAiKnowWords=t
 End Function
 
 
 
 /**
-	方法名：百度AI识别文字 
-	返回值：识别结果（json类型，含位置信息）
+	方法名：baiDuAiKnowWords
+	参数：level---识别版本
+	返回值：识别结果（json类型，含位置信息） 
+	描述：百度AI识别文字
 */
-Function 百度AI识别文字()
-	Dim post_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl,post_url2,path
+Function baiDuAiKnowWords(level)
+	Dim token_url,paramers,data,token,post_paramers,post_content,phoBase64,phoUrl,post_url,path
 	paramers = "grant_type=client_credentials&client_id=" & apikey & "&client_secret=" & seckey
-	post_url="https://aip.baidubce.com/oauth/2.0/token"		// 授权服务地址
-	data = URL.Post(post_url, paramers)
-	token = Encode.JsonToTable(data)	// token
-
-	path = "/临时/百度AI识别文字.png"
+	token_url="https://aip.baidubce.com/oauth/2.0/token"
+	data = URL.Post(token_url, paramers)
+	token = Encode.JsonToTable(data)
+	If isIos() Then 
+		path = "/temprary/baiDuAiKnowWords.png"
+	Else 
+		path = "/sdcard/Pictures/temprary/baiDuAiKnowWords.png"
+	End If
 	SnapShot path, 0, 0, 0, 0
-	// base64编码，再转url编码
 	phoBase64 = ShanHai.ReadFileBase(path)	// base64编码：ShanHai.ReadFileBase(路径)
 	phoUrl = ShanHai.CharToUrl(phoBase64)	// url编码：shanhai.CharToUrl(base64)
-
 	post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
-	post_url2 = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"
-	post_content = URL.Post(post_url2, post_paramers)
-	百度AI识别文字 = Encode.JsonToTable(post_content)
+	If level = 0 Then 
+		post_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/general"	// 高精度含位置版
+	ElseIf level = 1 Then
+		post_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate"	// 标准含位置版
+	ElseIf level = 2 Then
+		post_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic"	// 高精度版
+	ElseIf level = 3 Then
+		post_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic"	// 标准版
+	End If
+	If level = 0 Or level = 1 Then 
+		post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl & "&recognize_granularity=small"
+	Else 
+		post_paramers = "access_token=" & token["access_token"] & "&Content-Type=application/x-www-form-urlencoded&image=" & phoUrl
+	End If
+	post_content = URL.Post(post_url, post_paramers)
+	baiDuAiKnowWords = Encode.JsonToTable(post_content)
 End Function
 
 
 /**
-	方法名：输出所有文字
-	参数：json---百度AI识别文字后的words_result
+	方法名： printBaiDuAiKnowWords
+	参数：json ---百度AI识别文字后的words_result
+	描述：打印百度AI识别文字
 */
-Function 输出所有文字(json)
+Function printBaiDuAiKnowWords(json)
 	For i = 0 To UBOUND(json)
 		TracePrint json[i+1]["words"]
 	Next
@@ -108,13 +124,14 @@ End Function
 
 
 /**
-	方法名：获取精准文本坐标
+	方法名： getRightCoordinate
 	参数：json---百度AI识别文字后的words_result
 		  words---目标文本
 		  word---目标文本中的单字
-	返回值：坐标或提示信息（字符串类型）
+	返回值：坐标或提示信息（字符串类型） 
+	描述： 获取精准文本坐标
 */
-Function 获取精准文本坐标(json, words, word)
+Function getRightCoordinate(json, words, word)
 	For i = 0 To UBOUND(json)
 		TracePrint json[i+1]["words"]
 		If json[i+1]["words"] = words Then
@@ -123,25 +140,26 @@ Function 获取精准文本坐标(json, words, word)
 				If chars[j+1]["char"] = word Then 
 					Dim x = chars[j+1]["location"]["left"]
 					Dim y = chars[j+1]["location"]["top"]
-					获取精准文本坐标 = {"x":x,"y":y}
+					getRightCoordinate = {"x":x,"y":y}
 					Exit Function
 				End If
 			Next
 		End If
 	Next
-	获取精准文本坐标 = Null
+	getRightCoordinate = Null
 End Function
 
 
 
 /**
-	方法名：获取文本坐标 （返回第一个匹配的坐标）
+	方法名： getWordsCoordinate （返回第一个匹配的坐标）
 	参数：json---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
 		  word---目标字
-	返回值：坐标或提示信息（字符串类型）
+	返回值：坐标或提示信息（字符串类型） 
+	描述： 获取文本坐标
 */
-Function 获取文本坐标(json, words, word)
+Function getWordsCoordinate(json, words, word)
 	For i = 0 To UBOUND(json)
 		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
 			Dim chars, x, y
@@ -150,7 +168,7 @@ Function 获取文本坐标(json, words, word)
 				If chars[j + 1]["char"] = word Then 
 					x = chars[j+1]["location"]["left"]
 					y = chars[j+1]["location"]["top"]
-					获取文本坐标={"x":x,"y":y}
+					getWordsCoordinate={"x":x,"y":y}
 					Exit Function
 				End If
 			Next
@@ -164,13 +182,14 @@ End Function
 
 
 /**
-	方法名：获取所有文本坐标 
+	方法名：getAllCoordinate
 	参数：json---百度AI识别文字后的words_result
 		  words---目标字所在的词句（尽量唯一、少字）
-		  word---目标字
+		  word ---目标字
 	返回值：坐标或提示信息（字符串类型）
+	描述：获取所有文本坐标
 */
-Function 获取所有文本坐标(json, words, word)
+Function getAllCoordinate(json, words, word)
 	Dim h=0,arr()
 	For i = 0 To UBOUND(json)
 		If UTF8.InStr(1, json[i+1]["words"], words) > 0 Then 
@@ -186,64 +205,68 @@ Function 获取所有文本坐标(json, words, word)
 			Next
 		End If
 	Next
-	获取所有文本坐标 = arr
+	getAllCoordinate = arr
 End Function
 
 
 
 /**
-	方法名：是否包含目标字 
-	参数：word---目标字
+	方法名：zmBaiDuAiKnowWords
+	参数：word ---目标字
+		level ---识别版本
+	描述：是否包含目标字
 */
-Function 是否包含目标字(word)
-	Dim ret, t()
-	If Not zm.OcrBaiDuInit(apikey, seckey) Then
-    	TracePrint "初始化设置百度云识别失败"
+Function zmIsInclude(word, level)
+	Dim ret, t(), requestUrl
+	If level = 0 Then 
+		requestUrl = "https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic"	// 标准版
+	Else 
+		requestUrl = "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic"	// 高精度版
+	End If
+	If Not zm.OcrBaiDuInit(apikey, seckey, requestUrl) Then
+    	TracePrint "BaiDu Know Failed"
     	EndScript
 	End If
 	ret = zm.OcrBaiDu(0, 0, 0, 0)
 	If UTF8.InStr(1, ret, word) > 0 Then 
-		是否包含目标字 = True
+		zmIsInclude = True
 	Else 
-		是否包含目标字 = False
+		zmIsInclude = False
 	End If
 End Function
 
 
 
 /**
-	方法名：是否包含目标字高精度版
-	参数：word---目标字
-*/
-Function 是否包含目标字高精度版(word)
-	Dim ret, t()
-	If Not zm.OcrBaiDuInit(apikey, seckey, "https://aip.baidubce.com/rest/2.0/ocr/v1/accurate_basic") Then
-    	TracePrint "初始化设置百度云识别失败"
-    	EndScript
-	End If
-	ret = zm.OcrBaiDu(0, 0, 0, 0)
-	If UTF8.InStr(1, ret, word) > 0 Then 
-		是否包含目标字高精度版 = True
-	Else 
-		是否包含目标字高精度版 = False
-	End If
-End Function
-
-
-
-/**
-	方法名：保存坐标 
+	方法名： saveCoordinate 
 	参数：jsonObj --- 坐标对象（JSON类型）
-			path --- 坐标保存到的文件路径
+			path ---坐标保存到的文件路径
+	描述： 保存坐标
 */
-Function 保存坐标(jsonObj, path)
+Function saveCoordinate(jsonObj, path)
 	If IsNull(jsonObj) = False Then 
 		Dim jsonStr = Encode.TableToJson(jsonObj)
 		File.Write path, jsonStr
-		保存坐标 = True
+		saveCoordinate = True
 		TracePrint "坐标保存-成功"
 	Else 
-		保存坐标 = False
+		saveCoordinate = False
 		TracePrint "坐标对象-失败"
+	End If
+End Function
+
+
+
+/**
+	方法名：isIos 
+	参数：jsonObj --- 坐标对象（JSON类型）
+			path ---坐标保存到的文件路径
+	描述：判断设备是否是IOS设备
+*/
+Function isIos()
+	If UTF8.InStr(1, GetTempDir(), "storage") > 0 Then 
+		isIos = False
+	Else 
+		isIos = True
 	End If
 End Function

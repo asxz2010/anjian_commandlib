@@ -1,6 +1,61 @@
 
 {
 	"Description" : null,
+	"baiDuAiKnowWords" : 
+	{
+		"Description" : "1111111111",
+		"TranslateTemplate" : "222222222"
+	},
+	"creFolder" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"delFolder" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"getAllCoordinate" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"getRightCoordinate" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"getWordsCoordinate" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"isIos" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"printBaiDuAiKnowWords" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"saveCoordinate" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"zmBaiDuAiKnowWords" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
+	"zmIsInclude" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"保存坐标" : 
 	{
 		"Description" : null,
