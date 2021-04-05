@@ -270,3 +270,18 @@ Function isIos()
 		isIos = True
 	End If
 End Function
+
+
+
+/**
+	方法名： swipeBack 
+	描述：从左向右滑动
+*/
+Function swipeBack()
+	Dim x1,y1,x2,y2
+	x1 = 0
+	y1 = GetScreenY()/2
+	y2 = GetScreenY()/2
+	x2 = GetScreenX()
+	zm.Swipe x1,y1,x2,y2,200,true
+End Function

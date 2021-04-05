@@ -46,6 +46,11 @@
 		"Description" : null,
 		"TranslateTemplate" : null
 	},
+	"swipeBack" : 
+	{
+		"Description" : null,
+		"TranslateTemplate" : null
+	},
 	"zmBaiDuAiKnowWords" : 
 	{
 		"Description" : null,
